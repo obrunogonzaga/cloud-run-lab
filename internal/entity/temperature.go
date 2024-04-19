@@ -2,43 +2,38 @@ package entity
 
 import "errors"
 
-type Location struct {
-	City       string
+type Temperature struct {
 	Celsius    float64
 	Fahrenheit float64
 	Kelvin     float64
 }
 
-func NewLocation(city string, celsius float64) (*Location, error) {
-	location := &Location{
-		City:    city,
+func NewTemperature(celsius float64) (*Temperature, error) {
+	temperature := &Temperature{
 		Celsius: celsius,
 	}
-	err := location.isValid()
+	err := temperature.isValid()
 	if err != nil {
 		return nil, err
 	}
 
-	location.ConvertFahrenheit()
-	location.ConvertKelvin()
+	temperature.ConvertFahrenheit()
+	temperature.ConvertKelvin()
 
-	return location, nil
+	return temperature, nil
 }
 
-func (l *Location) isValid() error {
-	if l.City == "" {
-		return errors.New("invalid city")
-	}
-	if l.Celsius <= -273.15 {
+func (t *Temperature) isValid() error {
+	if t.Celsius <= -273.15 {
 		return errors.New("invalid celsius")
 	}
 	return nil
 }
 
-func (l *Location) ConvertFahrenheit() {
-	l.Fahrenheit = l.Celsius*1.8 + 32
+func (t *Temperature) ConvertFahrenheit() {
+	t.Fahrenheit = t.Celsius*1.8 + 32
 }
 
-func (l *Location) ConvertKelvin() {
-	l.Kelvin = l.Celsius + 273.15
+func (t *Temperature) ConvertKelvin() {
+	t.Kelvin = t.Celsius + 273.15
 }
