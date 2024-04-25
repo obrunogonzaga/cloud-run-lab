@@ -1,5 +1,10 @@
 package weatherapi
 
+import (
+	"context"
+	"github.com/obrunogonzaga/cloud-run-lab/internal/entity"
+)
+
 type GatewayInterface interface {
-	GetWeather(city string) (string, error)
+	GetWeather(ctx context.Context, city string) (*entity.Temperature, error)
 }

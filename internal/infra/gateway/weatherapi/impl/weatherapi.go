@@ -86,7 +86,10 @@ func (w *WeatherAPI) GetWeather(ctx context.Context, city string) (*entity.Tempe
 		return nil, err
 	}
 
-	return &entity.Temperature{
-		Celsius: output.Current.TempC,
-	}, nil
+	temperature, err := entity.NewTemperature(output.Current.TempC)
+	if err != nil {
+		return nil, err
+	}
+
+	return temperature, nil
 }

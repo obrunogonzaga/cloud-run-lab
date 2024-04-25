@@ -16,17 +16,17 @@ type Output struct {
 }
 
 type FindLocationUseCase struct {
-	GatewayFindLocatoin viacep.GatewayInterface
+	GatewayFindLocation viacep.GatewayInterface
 }
 
 func NewFindLocationUseCase(GatewayFindLocatoin viacep.GatewayInterface) *FindLocationUseCase {
 	return &FindLocationUseCase{
-		GatewayFindLocatoin: GatewayFindLocatoin,
+		GatewayFindLocation: GatewayFindLocatoin,
 	}
 }
 
 func (c *FindLocationUseCase) Execute(ctx context.Context, input Input) (Output, error) {
-	location, err := c.GatewayFindLocatoin.FindLocation(ctx, input.CEP)
+	location, err := c.GatewayFindLocation.FindLocation(ctx, input.CEP)
 	if err != nil {
 		return Output{}, err
 	}
