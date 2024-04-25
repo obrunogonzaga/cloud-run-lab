@@ -7,33 +7,37 @@ import (
 	"net/http"
 )
 
-type GetLocationHandler struct {
+type Handler struct {
 	LocationService viacep.GatewayInterface
 }
 
-func NewGetLocationHandler(LocationService viacep.GatewayInterface) *GetLocationHandler {
-	return &GetLocationHandler{
+func NewHandler(LocationService viacep.GatewayInterface) *Handler {
+	return &Handler{
 		LocationService: LocationService,
 	}
 }
 
-func (h *GetLocationHandler) Execute(w http.ResponseWriter, r *http.Request) {
-	var dto usecase.Input
-	err := json.NewDecoder(r.Body).Decode(&dto)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+func (h *Handler) Execute(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	//ctx, cancel := context.WithTimeout(r.Context(), time.Second*10)
+	//defer cancel()
+
+	zipCodeDTO := usecase.Input{
+		CEP: r.URL.Query().Get("zipcode"),
 	}
 
 	findLocation := usecase.NewFindLocationUseCase(h.LocationService)
-	output, err := findLocation.Execute(r.Context(), dto)
+	output, err := findLocation.Execute(r.Context(), zipCodeDTO)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	err = json.NewEncoder(w).Encode(output)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	w.WriteHeader(http.StatusOK)
 }
