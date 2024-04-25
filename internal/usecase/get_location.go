@@ -1,23 +1,38 @@
 package usecase
 
 import (
-	"github.com/obrunogonzaga/cloud-run-lab/internal/entity"
-	"github.com/stretchr/testify/assert"
-	"testing"
+	"context"
+	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/gateway/viacep"
 )
 
-type LocationInputDTO struct {
+type Input struct {
 	CEP string `json:"cep"`
 }
 
-func TestGivenAnEmptyCityWhenNewLocationThenReturnError(t *testing.T) {
-	// Given
-	city := ""
+type Output struct {
+	CEP   string `json:"cep"`
+	City  string `json:"localidade"`
+	State string `json:"uf"`
+}
 
-	// When
-	_, err := entity.NewLocation(city)
+type FindLocationUseCase struct {
+	GatewayFindLocatoin viacep.GatewayInterface
+}
 
-	// Then
-	assert.NotNil(t, err)
-	assert.Equal(t, "invalid city", err.Error())
+func NewFindLocationUseCase(GatewayFindLocatoin viacep.GatewayInterface) *FindLocationUseCase {
+	return &FindLocationUseCase{
+		GatewayFindLocatoin: GatewayFindLocatoin,
+	}
+}
+
+func (c *FindLocationUseCase) Execute(ctx context.Context, input Input) (Output, error) {
+	location, err := c.GatewayFindLocatoin.FindLocation(ctx, input.CEP)
+	if err != nil {
+		return Output{}, err
+	}
+
+	return Output{
+		CEP:  location.CEP,
+		City: location.City,
+	}, nil
 }
