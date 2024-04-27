@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/obrunogonzaga/cloud-run-lab/configs"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/entity"
 	"net/http"
 )
@@ -60,8 +61,8 @@ func NewWeatherAPI(client *http.Client) *WeatherAPI {
 	}
 }
 
-func (w *WeatherAPI) GetWeather(ctx context.Context, city string) (*entity.Temperature, error) {
-	url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=YOUR_API_KEY&q=" + city)
+func (w *WeatherAPI) GetWeather(ctx context.Context, city string, config configs.Config) (*entity.Temperature, error) {
+	url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=" + config.WeatherApiKey + "&q=" + city + "&aqi=no")
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err

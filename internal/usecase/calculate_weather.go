@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"github.com/obrunogonzaga/cloud-run-lab/configs"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/gateway/weatherapi"
 )
 
@@ -17,16 +18,18 @@ type CalculateWeatherOutput struct {
 
 type CalculateWeatherUseCase struct {
 	Gateway weatherapi.GatewayInterface
+	Config  *configs.Config
 }
 
-func NewCalculateWeatherUseCase(Gateway weatherapi.GatewayInterface) *CalculateWeatherUseCase {
+func NewCalculateWeatherUseCase(Gateway weatherapi.GatewayInterface, Config *configs.Config) *CalculateWeatherUseCase {
 	return &CalculateWeatherUseCase{
 		Gateway: Gateway,
+		Config:  Config,
 	}
 }
 
 func (c *CalculateWeatherUseCase) Execute(ctx context.Context, input CalculateWeatherInput) (CalculateWeatherOutput, error) {
-	weather, err := c.Gateway.GetWeather(ctx, input.City)
+	weather, err := c.Gateway.GetWeather(ctx, input.City, *c.Config)
 	if err != nil {
 		return CalculateWeatherOutput{}, err
 	}

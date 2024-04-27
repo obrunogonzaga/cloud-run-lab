@@ -1,21 +1,27 @@
 package main
 
 import (
-	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/gateway/viacep/impl"
+	"github.com/obrunogonzaga/cloud-run-lab/configs"
+	viacep "github.com/obrunogonzaga/cloud-run-lab/internal/infra/gateway/viacep/impl"
+	weatherapi "github.com/obrunogonzaga/cloud-run-lab/internal/infra/gateway/weatherapi/impl"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/web"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/web/webserver"
 	"net/http"
 )
 
 func main() {
+	config, err := configs.LoadConfig(".")
+	if err != nil {
+		panic(err)
+	}
 
 	client := &http.Client{}
-	viaCEP := impl.NewViaCEP(client)
-	handler := web.NewHandler(viaCEP)
+	viaCEP := viacep.NewViaCEP(client)
+	weather := weatherapi.NewWeatherAPI(client)
+	handler := web.NewHandler(viaCEP, weather, config)
 
 	//TODO: Implementar a injeção de dependência com o wire
-	//TODO: Implementar captura de variaveis de ambiente
-	restServer := webserver.NewWebServer(":8080")
+	restServer := webserver.NewWebServer(config.WebServerPort)
 	restServer.AddHandler("/weather", handler.Execute)
 
 	restServer.Start()
