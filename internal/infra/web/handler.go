@@ -3,19 +3,18 @@ package web
 import (
 	"encoding/json"
 	"github.com/obrunogonzaga/cloud-run-lab/configs"
-	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/gateway/viacep"
-	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/gateway/weatherapi"
+	locationService "github.com/obrunogonzaga/cloud-run-lab/internal/domain/location"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/usecase"
 	"net/http"
 )
 
 type Handler struct {
-	LocationService viacep.GatewayInterface
-	WeatherService  weatherapi.GatewayInterface
+	LocationService locationService.LocationService
+	WeatherService  locationService.WeatherRepository
 	Config          *configs.Config
 }
 
-func NewHandler(LocationService viacep.GatewayInterface, WeatherService weatherapi.GatewayInterface, Config *configs.Config) *Handler {
+func NewHandler(LocationService locationService.LocationService, WeatherService locationService.WeatherRepository, Config *configs.Config) *Handler {
 	return &Handler{
 		LocationService: LocationService,
 		WeatherService:  WeatherService,

@@ -1,4 +1,4 @@
-package entity
+package weather
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -10,7 +10,7 @@ func TestGivenAnInvalidCelsiusWhenNewLocationThenReturnError(t *testing.T) {
 	celsius := -300.0
 
 	// When
-	_, err := NewTemperature(celsius)
+	_, err := NewWeather(celsius)
 
 	// Then
 	assert.NotNil(t, err)
@@ -22,7 +22,7 @@ func TestGivenAValidParamsWhenNewLocationThenReturnLocationWithAllParams(t *test
 	celsius := 10.0
 
 	// When
-	location, err := NewTemperature(celsius)
+	location, err := NewWeather(celsius)
 
 	// Then
 	assert.Nil(t, err)
@@ -34,7 +34,7 @@ func TestGivenAValidParamsWhenNewLocationThenReturnLocationWithAllParams(t *test
 func TestGivenAValidCityAndCelsiusWhenConvertFahrenheitThenReturnFahrenheit(t *testing.T) {
 	// Given
 	celsius := 10.0
-	location, _ := NewTemperature(celsius)
+	location, _ := NewWeather(celsius)
 
 	// When
 	location.ConvertFahrenheit()
@@ -46,7 +46,7 @@ func TestGivenAValidCityAndCelsiusWhenConvertFahrenheitThenReturnFahrenheit(t *t
 func TestGivenAValidCityAndCelsiusWhenConvertKelvinThenReturnKelvin(t *testing.T) {
 	// Given
 	celsius := 10.0
-	location, _ := NewTemperature(celsius)
+	location, _ := NewWeather(celsius)
 
 	// When
 	location.ConvertKelvin()

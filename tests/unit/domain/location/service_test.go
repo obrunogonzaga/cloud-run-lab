@@ -1,9 +1,10 @@
-package impl
+package location
 
 import (
 	"context"
 	"errors"
-	"github.com/obrunogonzaga/cloud-run-lab/internal/entity"
+	location2 "github.com/obrunogonzaga/cloud-run-lab/internal/domain/location"
+	"github.com/obrunogonzaga/cloud-run-lab/internal/domain/location/service"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -18,11 +19,11 @@ func TestFindLocation_ValidCEP(t *testing.T) {
 	defer server.Close()
 
 	client := server.Client()
-	viaCEP := NewViaCEP(client)
-	location, err := viaCEP.FindLocation(context.Background(), "01001-000")
+	locationService := service.NewLocationService(client)
+	location, err := locationService.FindLocationByZipCode(context.Background(), "01001-000")
 
 	assert.NoError(t, err)
-	assert.Equal(t, &entity.Location{CEP: "01001-000", City: "São Paulo"}, location)
+	assert.Equal(t, &location2.Location{CEP: "01001-000", City: "São Paulo"}, location)
 }
 
 func TestFindLocation_InvalidCEP(t *testing.T) {
@@ -32,8 +33,8 @@ func TestFindLocation_InvalidCEP(t *testing.T) {
 	defer server.Close()
 
 	client := server.Client()
-	viaCEP := NewViaCEP(client)
-	_, err := viaCEP.FindLocation(context.Background(), "invalid")
+	locationService := service.NewLocationService(client)
+	_, err := locationService.FindLocationByZipCode(context.Background(), "invalid")
 
 	assert.Error(t, err)
 }
@@ -46,12 +47,12 @@ func TestFindLocation_Timeout(t *testing.T) {
 	defer server.Close()
 
 	client := server.Client()
-	viaCEP := NewViaCEP(client)
+	locationService := service.NewLocationService(client)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Millisecond)
 	defer cancel()
 
-	_, err := viaCEP.FindLocation(ctx, "01001-000")
+	_, err := locationService.FindLocationByZipCode(ctx, "01001-000")
 
 	assert.True(t, errors.Is(err, context.DeadlineExceeded))
 }

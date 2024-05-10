@@ -1,4 +1,4 @@
-package entity
+package location
 
 import "errors"
 

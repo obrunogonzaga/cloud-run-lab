@@ -1,14 +1,14 @@
-package impl
+package repository
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/obrunogonzaga/cloud-run-lab/internal/entity"
+	"github.com/obrunogonzaga/cloud-run-lab/internal/domain/location"
 	"net/http"
 )
 
-type Output struct {
+type LocationOutput struct {
 	Cep         string `json:"cep"`
 	Logradouro  string `json:"logradouro"`
 	Complemento string `json:"complemento"`
@@ -21,24 +21,24 @@ type Output struct {
 	Siafi       string `json:"siafi"`
 }
 
-type ViaCEP struct {
-	Client *http.Client
+type LocationRepositoryImpl struct {
+	client *http.Client
 }
 
-func NewViaCEP(client *http.Client) *ViaCEP {
-	return &ViaCEP{
-		Client: client,
+func NewLocationRepository(client *http.Client) location.LocationRepository {
+	return &LocationRepositoryImpl{
+		client: client,
 	}
 }
 
-func (v *ViaCEP) FindLocation(ctx context.Context, cep string) (*entity.Location, error) {
+func (v *LocationRepositoryImpl) FindCityByZipCode(ctx context.Context, cep string) (*location.Location, error) {
 	url := fmt.Sprintf("https://viacep.com.br/ws/%s/json/", cep)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := v.Client.Do(req)
+	resp, err := v.client.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -52,12 +52,12 @@ func (v *ViaCEP) FindLocation(ctx context.Context, cep string) (*entity.Location
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	var output Output
+	var output LocationOutput
 	if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 		return nil, err
 	}
 
-	return &entity.Location{
+	return &location.Location{
 		CEP:  output.Cep,
 		City: output.Localidade,
 	}, nil

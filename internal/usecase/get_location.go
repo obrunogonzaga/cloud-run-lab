@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/gateway/viacep"
+	locationService "github.com/obrunogonzaga/cloud-run-lab/internal/domain/location"
 )
 
 type Input struct {
@@ -16,17 +16,17 @@ type Output struct {
 }
 
 type FindLocationUseCase struct {
-	GatewayFindLocation viacep.GatewayInterface
+	LocationService locationService.LocationService
 }
 
-func NewFindLocationUseCase(GatewayFindLocatoin viacep.GatewayInterface) *FindLocationUseCase {
+func NewFindLocationUseCase(LocationService locationService.LocationService) *FindLocationUseCase {
 	return &FindLocationUseCase{
-		GatewayFindLocation: GatewayFindLocatoin,
+		LocationService: LocationService,
 	}
 }
 
 func (c *FindLocationUseCase) Execute(ctx context.Context, input Input) (Output, error) {
-	location, err := c.GatewayFindLocation.FindLocation(ctx, input.CEP)
+	location, err := c.LocationService.FindLocationByZipCode(ctx, input.CEP)
 	if err != nil {
 		return Output{}, err
 	}

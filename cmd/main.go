@@ -2,8 +2,9 @@ package main
 
 import (
 	"github.com/obrunogonzaga/cloud-run-lab/configs"
-	viacep "github.com/obrunogonzaga/cloud-run-lab/internal/infra/gateway/viacep/impl"
-	weatherapi "github.com/obrunogonzaga/cloud-run-lab/internal/infra/gateway/weatherapi/impl"
+	"github.com/obrunogonzaga/cloud-run-lab/internal/adapters/repository"
+	repository2 "github.com/obrunogonzaga/cloud-run-lab/internal/domain/location/repository"
+	locatiionService "github.com/obrunogonzaga/cloud-run-lab/internal/domain/location/service"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/web"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/web/webserver"
 	"net/http"
@@ -16,9 +17,10 @@ func main() {
 	}
 
 	client := &http.Client{}
-	viaCEP := viacep.NewViaCEP(client)
-	weather := weatherapi.NewWeatherAPI(client)
-	handler := web.NewHandler(viaCEP, weather, config)
+	locationRepo := repository2.NewLocationRepository(client)
+	locationService := locatiionService.NewLocationService(locationRepo)
+	weather := repository.NewWeatherAPI(client)
+	handler := web.NewHandler(locationService, weather, config)
 
 	//TODO: Implementar a injeção de dependência com o wire
 	restServer := webserver.NewWebServer(config.WebServerPort)
