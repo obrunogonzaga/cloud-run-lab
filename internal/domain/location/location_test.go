@@ -1,7 +1,6 @@
 package location
 
 import (
-	"github.com/obrunogonzaga/cloud-run-lab/internal/domain/location"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -11,7 +10,7 @@ func TestGivenAnEmptyCityWhenNewLocationThenReturnError(t *testing.T) {
 	city := ""
 
 	// When
-	_, err := location.NewLocation(city)
+	_, err := NewLocation(city)
 
 	// Then
 	assert.NotNil(t, err)
@@ -23,7 +22,7 @@ func TestGivenAValidCityWhenNewLocationThenReturnLocationWithAllParams(t *testin
 	city := "São Paulo"
 
 	// When
-	location, err := location.NewLocation(city)
+	location, err := NewLocation(city)
 
 	// Then
 	assert.Nil(t, err)

@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 	"github.com/obrunogonzaga/cloud-run-lab/configs"
-	"github.com/obrunogonzaga/cloud-run-lab/internal/domain/location"
+	"github.com/obrunogonzaga/cloud-run-lab/internal/repository"
 )
 
 type CalculateWeatherInput struct {
@@ -11,17 +11,17 @@ type CalculateWeatherInput struct {
 }
 
 type CalculateWeatherOutput struct {
-	Celsius    float64 `json:"celsius"`
-	Fahrenheit float64 `json:"fahrenheit"`
-	Kelvin     float64 `json:"kelvin"`
+	Celsius    float64 `json:"temp_C"`
+	Fahrenheit float64 `json:"temp_F"`
+	Kelvin     float64 `json:"temp_K"`
 }
 
 type CalculateWeatherUseCase struct {
-	Gateway location.WeatherRepository
+	Gateway repository.WeatherRepository
 	Config  *configs.Config
 }
 
-func NewCalculateWeatherUseCase(Gateway location.WeatherRepository, Config *configs.Config) *CalculateWeatherUseCase {
+func NewCalculateWeatherUseCase(Gateway repository.WeatherRepository, Config *configs.Config) *CalculateWeatherUseCase {
 	return &CalculateWeatherUseCase{
 		Gateway: Gateway,
 		Config:  Config,

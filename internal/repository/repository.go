@@ -1,8 +1,9 @@
-package location
+package repository
 
 import (
 	"context"
 	"github.com/obrunogonzaga/cloud-run-lab/configs"
+	"github.com/obrunogonzaga/cloud-run-lab/internal/domain/location"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/domain/weather"
 )
 
@@ -11,5 +12,5 @@ type WeatherRepository interface {
 }
 
 type LocationRepository interface {
-	FindCityByZipCode(ctx context.Context, cep string) (*Location, error)
+	FindCityByZipCode(ctx context.Context, cep string) (*location.Location, error)
 }

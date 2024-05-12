@@ -2,19 +2,22 @@ package web
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/obrunogonzaga/cloud-run-lab/configs"
-	locationService "github.com/obrunogonzaga/cloud-run-lab/internal/domain/location"
+	customErrors "github.com/obrunogonzaga/cloud-run-lab/internal/errors"
+	"github.com/obrunogonzaga/cloud-run-lab/internal/repository"
+	locationService "github.com/obrunogonzaga/cloud-run-lab/internal/service"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/usecase"
 	"net/http"
 )
 
 type Handler struct {
 	LocationService locationService.LocationService
-	WeatherService  locationService.WeatherRepository
+	WeatherService  repository.WeatherRepository
 	Config          *configs.Config
 }
 
-func NewHandler(LocationService locationService.LocationService, WeatherService locationService.WeatherRepository, Config *configs.Config) *Handler {
+func NewHandler(LocationService locationService.LocationService, WeatherService repository.WeatherRepository, Config *configs.Config) *Handler {
 	return &Handler{
 		LocationService: LocationService,
 		WeatherService:  WeatherService,
@@ -34,6 +37,10 @@ func (h *Handler) Execute(w http.ResponseWriter, r *http.Request) {
 	findLocation := usecase.NewFindLocationUseCase(h.LocationService)
 	output, err := findLocation.Execute(r.Context(), zipCodeDTO)
 	if err != nil {
+		if errors.Is(err, customErrors.ErrInvalidCEP) {
+			http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+			return
+		}
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

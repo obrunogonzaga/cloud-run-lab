@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/domain/location"
+	customErrors "github.com/obrunogonzaga/cloud-run-lab/internal/errors"
+	validadeZipCode "github.com/obrunogonzaga/cloud-run-lab/pkg/cep"
 	"net/http"
 )
 
@@ -25,13 +27,17 @@ type LocationRepositoryImpl struct {
 	client *http.Client
 }
 
-func NewLocationRepository(client *http.Client) location.LocationRepository {
+func NewLocationRepository(client *http.Client) LocationRepository {
 	return &LocationRepositoryImpl{
 		client: client,
 	}
 }
 
 func (v *LocationRepositoryImpl) FindCityByZipCode(ctx context.Context, cep string) (*location.Location, error) {
+	err := validadeZipCode.IsValid(cep)
+	if err != nil {
+		return nil, customErrors.ErrInvalidCEP
+	}
 	url := fmt.Sprintf("https://viacep.com.br/ws/%s/json/", cep)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {

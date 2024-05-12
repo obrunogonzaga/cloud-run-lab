@@ -22,7 +22,6 @@ func NewLocation(city string) (*Location, error) {
 func (l *Location) IsValid() error {
 
 	// TODO: Implement the validation logic for CEP
-
 	if l.City == "" {
 		return errors.New("invalid city")
 	}

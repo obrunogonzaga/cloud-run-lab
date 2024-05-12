@@ -2,11 +2,10 @@ package main
 
 import (
 	"github.com/obrunogonzaga/cloud-run-lab/configs"
-	"github.com/obrunogonzaga/cloud-run-lab/internal/adapters/repository"
-	repository2 "github.com/obrunogonzaga/cloud-run-lab/internal/domain/location/repository"
-	locatiionService "github.com/obrunogonzaga/cloud-run-lab/internal/domain/location/service"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/web"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/web/webserver"
+	repository "github.com/obrunogonzaga/cloud-run-lab/internal/repository"
+	locatiionService "github.com/obrunogonzaga/cloud-run-lab/internal/service"
 	"net/http"
 )
 
@@ -17,7 +16,7 @@ func main() {
 	}
 
 	client := &http.Client{}
-	locationRepo := repository2.NewLocationRepository(client)
+	locationRepo := repository.NewLocationRepository(client)
 	locationService := locatiionService.NewLocationService(locationRepo)
 	weather := repository.NewWeatherAPI(client)
 	handler := web.NewHandler(locationService, weather, config)

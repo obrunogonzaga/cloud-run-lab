@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	locationService "github.com/obrunogonzaga/cloud-run-lab/internal/domain/location"
+	locationService "github.com/obrunogonzaga/cloud-run-lab/internal/service"
 )
 
 type Input struct {

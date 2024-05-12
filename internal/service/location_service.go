@@ -3,13 +3,14 @@ package service
 import (
 	"context"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/domain/location"
+	"github.com/obrunogonzaga/cloud-run-lab/internal/repository"
 )
 
 type locationServiceImpl struct {
-	repo location.LocationRepository
+	repo repository.LocationRepository
 }
 
-func NewLocationService(repo location.LocationRepository) location.LocationService {
+func NewLocationService(repo repository.LocationRepository) LocationService {
 	return &locationServiceImpl{
 		repo: repo,
 	}
