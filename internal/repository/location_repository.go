@@ -63,6 +63,10 @@ func (v *LocationRepositoryImpl) FindCityByZipCode(ctx context.Context, cep stri
 		return nil, err
 	}
 
+	if output.Cep == "" {
+		return nil, customErrors.ErrZipCodetNotFound
+	}
+
 	return &location.Location{
 		CEP:  output.Cep,
 		City: output.Localidade,
