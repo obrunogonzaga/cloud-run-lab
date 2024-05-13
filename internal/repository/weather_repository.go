@@ -7,6 +7,7 @@ import (
 	"github.com/obrunogonzaga/cloud-run-lab/configs"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/domain/weather"
 	"net/http"
+	"net/url"
 )
 
 type Output struct {
@@ -63,7 +64,8 @@ func NewWeatherAPI(client *http.Client) *WeatherAPI {
 
 func (w *WeatherAPI) GetWeather(ctx context.Context, city string, config configs.Config) (*weather.Weather, error) {
 	//url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=" + config.WeatherApiKey + "&q=" + city + "&aqi=no")
-	url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=" + "dc615a7639ce41dc862232340242504" + "&q=" + city + "&aqi=no")
+	escapedCity := url.QueryEscape(city)
+	url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=" + "dc615a7639ce41dc862232340242504" + "&q=" + escapedCity + "&aqi=no")
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
