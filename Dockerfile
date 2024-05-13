@@ -16,7 +16,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /bin/aplicacao .
 
 FROM alpine:latest
 
-EXPOSE 8000
+EXPOSE 8080
 
 # Instalar certificados CA
 RUN apk --no-cache add ca-certificates
