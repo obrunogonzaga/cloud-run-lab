@@ -4,7 +4,7 @@
 
 Este projeto é um sistema desenvolvido em Go que recebe um CEP, identifica a cidade e retorna o clima atual (temperatura em graus Celsius, Fahrenheit e Kelvin). O sistema é hospedado no Google Cloud Run.
 
-Acesse a URL https://cloudrun-goexpert-za5o6n5xla-uc.a.run.app/weather?zipcode=80320310 para acessar a aplicação no Google Cloud Run.
+Acesse a URL https://cloudrun-goexpert-za5o6n5xla-uc.a.run.app/weather?zipcode=01153000 para acessar a aplicação no Google Cloud Run.
 
 ## Requisitos
 
