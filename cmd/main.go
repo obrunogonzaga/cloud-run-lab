@@ -4,7 +4,7 @@ import (
 	"github.com/obrunogonzaga/cloud-run-lab/configs"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/web"
 	"github.com/obrunogonzaga/cloud-run-lab/internal/infra/web/webserver"
-	repository "github.com/obrunogonzaga/cloud-run-lab/internal/repository"
+	"github.com/obrunogonzaga/cloud-run-lab/internal/repository"
 	locatiionService "github.com/obrunogonzaga/cloud-run-lab/internal/service"
 	"net/http"
 )
